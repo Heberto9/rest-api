@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Videojuego</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #1a1a2e;
+      color: white;
+    }
+    #info { margin-bottom: 20px; font-size: 20px; }
+    iframe {
+      width: 960px;
+      height: 600px;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="info">Cargando usuario...</div>
+  <iframe id="juego" src=""></iframe>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('id');
+
+    if (!userId) {
+      window.location.href = 'index.html';
+    }
+
+    async function cargarUsuario() {
+      const response = await fetch(`http://localhost:3000/users/${userId}`);
+      const data = await response.json();
+      document.getElementById('info').textContent = 
+        `Bienvenido ${data.nombre} | Puntos: ${data.puntos || 0}`;
+      
+      // Cargar el juego con el ID del usuario en la URL
+      document.getElementById('juego').src = `Build/index.html?id=${userId}`;
+    }
+
+    cargarUsuario();
+  </script>
+</body>
+</html>
